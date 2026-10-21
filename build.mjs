@@ -11,6 +11,8 @@ const out = join(root, 'dist');
 
 const SITE_URL = (process.env.SITE_URL || 'https://www.janda-construction.com').replace(/\/$/, '');
 const IMG_BASE = process.env.IMG_BASE || 'https://cdn.webnamesandnumbers.com/wp-content/uploads/sites/1020/';
+// Set when the site lives in a subfolder, e.g. BASE_PATH=/J-A for GitHub Pages project sites.
+const BASE_PATH = (process.env.BASE_PATH || '').replace(/\/$/, '');
 // Leave empty to use a mailto draft. Set to a Formspree style endpoint to post the form.
 const FORM_ENDPOINT = process.env.FORM_ENDPOINT || '';
 
@@ -83,7 +85,8 @@ function render(meta, body, path) {
     .replaceAll('{{year}}', String(new Date().getFullYear()))
     .replaceAll('{{jsonld}}', jsonld(meta, path))
     .replaceAll('{{content}}', body);
-  return expand(html);
+  html = expand(html);
+  return BASE_PATH ? html.replace(/\b(href|src)="\/(?!\/)/g, `$1="${BASE_PATH}/`) : html;
 }
 
 rmSync(out, { recursive: true, force: true });
