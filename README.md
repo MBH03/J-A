@@ -20,7 +20,6 @@ Deploy the contents of `dist/` to any static host (Netlify, Cloudflare Pages, Gi
 - `FORM_ENDPOINT` env var: set to a form service URL to post the contact form. Left empty it opens an email draft.
 
 ## Open items to confirm with James
-- Business hours: footer says Mon to Fri, contact page says Mon to Sat
 - "Since 2004" (home page) vs "since 1990" (all other pages)
 - Brown accent color (approximated as #6B3F10)
 - Testimonial section background, form handling and spam protection, gallery album groupings

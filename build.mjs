@@ -15,7 +15,7 @@ const IMG_BASE = process.env.IMG_BASE || 'https://cdn.webnamesandnumbers.com/wp-
 const FORM_ENDPOINT = process.env.FORM_ENDPOINT || '';
 
 // Facts that conflict on the live site. Change them here once James confirms.
-const HOURS = 'Mon to Fri 7:00am to 6:00pm<br>Closed Sat and Sun';
+const HOURS = 'Mon to Sat 7:00am to 6:00pm<br>Closed Sun';
 const CONTACT_HOURS = 'Open 7am to 6pm Monday to Saturday';
 
 const img = (p) => IMG_BASE + p;
