@@ -1,0 +1,13 @@
+{
+  "name": "j-a-construction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static rebuild of the J & A Construction website",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:local": "IMG_BASE=/assets/img/ node build.mjs",
+    "images": "bash scripts/fetch-images.sh",
+    "serve": "npx --yes serve dist"
+  }
+}
