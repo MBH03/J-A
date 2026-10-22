@@ -57,20 +57,58 @@ function expand(html) {
 const layout = readFileSync(join(src, 'layout.html'), 'utf8');
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
-const jsonld = (meta, path) => JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'GeneralContractor',
-  name: 'J & A Construction',
-  url: SITE_URL + path,
-  telephone: '+1-435-592-0680',
-  email: 'jameshenrie2006@hotmail.com',
-  image: meta.og ? img(meta.og) : undefined,
-  address: { '@type': 'PostalAddress', streetAddress: '1005 E Mill Hollow Way', addressLocality: 'Cedar City', addressRegion: 'UT', postalCode: '84721', addressCountry: 'US' },
-  geo: { '@type': 'GeoCoordinates', latitude: 37.6734344, longitude: -113.0729133 },
-  areaServed: ['Cedar City', 'New Harmony', 'Cedar Mountain', 'Brian Head', 'Parowan', 'Panguitch Lake', 'Enoch', 'Kanarraville', 'Panguitch'].map((n) => ({ '@type': 'City', name: n })),
-  sameAs: ['https://www.facebook.com/jandaconstructionut', 'https://www.yelp.com/biz/j-and-a-construction-cedar-city-2'],
-  founder: { '@type': 'Person', name: 'James Henrie' },
-}).replaceAll('<', '\\u003c');
+const BUSINESS_ID = SITE_URL + '/#business';
+const SERVICE_PAGES = [
+  ['Siding installation and replacement', '/siding/'],
+  ['Gutter installation and replacement', '/gutters-in-cedar-city-ut/'],
+  ['Home remodeling', '/home-remodeling-in-cedar-city-ut/'],
+  ['Kitchen remodeling', '/kitchen-remodeling-in-cedar-city-ut/'],
+  ['Bathroom remodeling', '/bathroom-remodeling-in-cedar-city-ut/'],
+  ['Basement finishing', '/basement-finishing-in-cedar-city-ut/'],
+  ['Home additions', '/home-additions-in-cedar-city-ut/'],
+  ['Custom home building', '/custom-home-builder-in-cedar-city-ut/'],
+];
+const AREAS = ['Cedar City', 'New Harmony', 'Cedar Mountain', 'Brian Head', 'Parowan', 'Panguitch Lake', 'Panguitch', 'Enoch', 'Kanarraville'];
+const decode = (t) => t.replace(/&amp;/g, '&').replace(/&#8209;/g, '-').replace(/&quot;/g, '"').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
+function faqsFrom(body) {
+  return [...body.matchAll(/<details class="faq"><summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g)]
+    .map((m) => ({ '@type': 'Question', name: decode(m[1]), acceptedAnswer: { '@type': 'Answer', text: decode(m[2]) } }));
+}
+
+const jsonld = (meta, path, body) => {
+  const graph = [{
+    '@type': ['GeneralContractor', 'HomeAndConstructionBusiness'],
+    '@id': BUSINESS_ID,
+    name: 'J & A Construction',
+    url: SITE_URL + '/',
+    telephone: '+1-435-592-0680',
+    email: 'jameshenrie2006@hotmail.com',
+    logo: img('2024/07/02145514/logo.png'),
+    image: img('2024/07/02155203/14109959553950996144.jpg'),
+    description: 'General contractor in Cedar City, Utah providing siding, gutters, remodeling, home additions, basement finishing and custom home building across Southern Utah.',
+    address: { '@type': 'PostalAddress', streetAddress: '1005 E Mill Hollow Way', addressLocality: 'Cedar City', addressRegion: 'UT', postalCode: '84721', addressCountry: 'US' },
+    geo: { '@type': 'GeoCoordinates', latitude: 37.6734344, longitude: -113.0729133 },
+    hasMap: 'https://www.google.com/maps/place/J+and+A+Construction/@37.6734344,-113.0729133,17z',
+    openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '07:00', closes: '18:00' }],
+    areaServed: AREAS.map((n) => ({ '@type': 'City', name: n, containedInPlace: { '@type': 'State', name: 'Utah' } })),
+    founder: { '@type': 'Person', name: 'James Henrie' },
+    sameAs: ['https://www.facebook.com/jandaconstructionut', 'https://www.yelp.com/biz/j-and-a-construction-cedar-city-2'],
+    hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Construction services', itemListElement: SERVICE_PAGES.map(([n, u]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: n, url: SITE_URL + u } })) },
+  }];
+  if (meta.slug !== 'home' && meta.slug !== '404') {
+    graph.push({ '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+      { '@type': 'ListItem', position: 2, name: meta.crumb || decode(meta.title.split('|')[0]), item: SITE_URL + path },
+    ] });
+  }
+  if (meta.service) {
+    graph.push({ '@type': 'Service', name: meta.service, serviceType: meta.service, url: SITE_URL + path, provider: { '@id': BUSINESS_ID }, areaServed: AREAS.map((n) => ({ '@type': 'City', name: n })), description: meta.description });
+  }
+  const faqs = faqsFrom(body);
+  if (faqs.length) graph.push({ '@type': 'FAQPage', mainEntity: faqs });
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replaceAll('<', '\\u003c');
+};
 
 function render(meta, body, path) {
   let html = layout
@@ -83,7 +121,7 @@ function render(meta, body, path) {
     .replaceAll('{{slug}}', meta.slug)
     .replaceAll('{{hours}}', HOURS)
     .replaceAll('{{year}}', String(new Date().getFullYear()))
-    .replaceAll('{{jsonld}}', jsonld(meta, path))
+    .replaceAll('{{jsonld}}', jsonld(meta, path, body))
     .replaceAll('{{content}}', body);
   html = expand(html);
   return BASE_PATH ? html.replace(/\b(href|src)="\/(?!\/)/g, `$1="${BASE_PATH}/`) : html;
@@ -107,7 +145,7 @@ for (const f of readdirSync(join(src, 'pages')).filter((n) => n.endsWith('.html'
   if (slug !== '404') urls.push(path);
 }
 
-writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE_URL}${u}</loc></url>`).join('\n')}\n</urlset>\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE_URL}${u}</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 
 console.log(`Built ${urls.length} pages to dist/ (images: ${IMG_BASE})`);
