@@ -56,6 +56,15 @@
     buildDots();
   }
 
+
+  // Before and after sliders (the range input handles mouse, touch and keyboard)
+  $$('.ba-slider').forEach((el) => {
+    const range = $('.ba-range', el);
+    const set = () => el.style.setProperty('--pos', range.value + '%');
+    range.addEventListener('input', set);
+    set();
+  });
+
   // Gallery lightbox
   const links = $$('[data-lightbox]');
   if (links.length) {

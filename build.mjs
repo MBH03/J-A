@@ -1,6 +1,5 @@
 // Static site builder for J & A Construction. No dependencies.
-//   node build.mjs                      images load from the live CDN (preview)
-//   IMG_BASE=/assets/img/ node build.mjs   images load from dist/assets/img (after `npm run images`)
+//   node build.mjs   images load from /assets/img/ (copied into dist/assets/img)
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +9,7 @@ const src = join(root, 'src');
 const out = join(root, 'dist');
 
 const SITE_URL = (process.env.SITE_URL || 'https://www.janda-construction.com').replace(/\/$/, '');
-const IMG_BASE = process.env.IMG_BASE || 'https://cdn.webnamesandnumbers.com/wp-content/uploads/sites/1020/';
+const IMG_BASE = process.env.IMG_BASE || '/assets/img/';
 // Set when the site lives in a subfolder, e.g. BASE_PATH=/J-A for GitHub Pages project sites.
 const BASE_PATH = (process.env.BASE_PATH || '').replace(/\/$/, '');
 // Leave empty to use a mailto draft. Set to a Formspree style endpoint to post the form.
@@ -21,14 +20,44 @@ const HOURS = 'Mon to Sat 7:00am to 6:00pm<br>Closed Sun';
 const CONTACT_HOURS = 'Open 7am to 6pm Monday to Saturday';
 
 const img = (p) => IMG_BASE + p;
+// Absolute address for share tags and structured data
+const absImg = (p) => (/^https?:/.test(IMG_BASE) ? IMG_BASE + p : SITE_URL + IMG_BASE + p);
 
 const credentials = `<ul class="checks one"><li>BBB</li><li>Certified Kitchen &amp; Bath Remodeler</li><li>Electrical Contractor License</li><li>Certified Lead Renovator</li></ul>`;
 const cta = (label = 'Contact Us') => `<div class="btn-row"><a class="btn" href="/contact/">${label}</a></div>`;
 
 const gallery = JSON.parse(readFileSync(join(src, 'gallery.json'), 'utf8'));
+const baSlider = (p) => `<figure class="ba-card">
+  <h3>${p.title}: Before and After</h3>
+  <p>${p.summary}</p>
+  <div class="ba-slider" style="--pos:50%">
+    <img class="ba-after" src="${img(p.after)}" alt="${p.afterAlt}" loading="lazy">
+    <img class="ba-before" src="${img(p.before)}" alt="${p.beforeAlt}" loading="lazy">
+    <span class="ba-label ba-label-before" aria-hidden="true">Before</span>
+    <span class="ba-label ba-label-after" aria-hidden="true">After</span>
+    <span class="ba-handle" aria-hidden="true"></span>
+    <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after: ${p.title}">
+  </div>
+  <div class="ba-pair">
+    <a href="${img(p.before)}" data-lightbox><img src="${img(p.before)}" alt="${p.beforeAlt}" loading="lazy"><b>Before</b></a>
+    <a href="${img(p.after)}" data-lightbox><img src="${img(p.after)}" alt="${p.afterAlt}" loading="lazy"><b>After</b></a>
+  </div>
+</figure>`;
+const setHtml = (set, i) => `<section class="section${set.id === 'master-bathroom' ? ' tint' : ''}" id="${set.id}">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Project 0${i + 2}</span>
+      <h2>${set.title}</h2>
+      <p>${set.summary}</p>
+    </div>
+    <div class="set-grid ${set.layout}">
+${set.photos.map((p) => `      <figure class="set-photo"><a href="${img('gallery/' + p.name + '.jpg')}" data-lightbox><img src="${img('gallery/' + p.name + '-sm.jpg')}" alt="${p.alt}" loading="lazy"></a><figcaption>${p.caption}</figcaption></figure>`).join('\n')}
+    </div>
+  </div>
+</section>`;
 const galleryHtml = {
-  featured: gallery.featured.map((f) => `<a href="${img(f.src)}" data-lightbox><img src="${img(f.src)}" alt="${f.alt}" loading="lazy"></a>`).join('\n'),
-  grid: gallery.grid.map((p, i) => `<a href="${img(p)}" data-lightbox><img src="${img(p)}" alt="J &amp; A Construction project photo ${i + 1}" loading="lazy"></a>`).join('\n'),
+  projects: gallery.projects.map(baSlider).join('\n'),
+  sets: gallery.sets.map(setHtml).join('\n\n'),
 };
 
 function parse(file) {
@@ -47,8 +76,8 @@ function expand(html) {
   return html
     .replaceAll('{{credentials}}', credentials)
     .replace(/\{\{cta(?::([^}]*))?\}\}/g, (_, l) => cta(l || undefined))
-    .replaceAll('{{gallery:featured}}', galleryHtml.featured)
-    .replaceAll('{{gallery:grid}}', galleryHtml.grid)
+    .replaceAll('{{gallery:projects}}', galleryHtml.projects)
+    .replaceAll('{{gallery:sets}}', galleryHtml.sets)
     .replaceAll('{{contact_hours}}', CONTACT_HOURS)
     .replaceAll('{{form_endpoint}}', FORM_ENDPOINT)
     .replace(/\{\{img:([^}]+)\}\}/g, (_, p) => img(p));
@@ -84,8 +113,8 @@ const jsonld = (meta, path, body) => {
     url: SITE_URL + '/',
     telephone: '+1-435-592-0680',
     email: 'jameshenrie2006@hotmail.com',
-    logo: img('2024/07/02145514/logo.png'),
-    image: img('2024/07/02155203/14109959553950996144.jpg'),
+    logo: absImg('2024/07/02145514/logo.png'),
+    image: absImg('gallery/home-hero.jpg'),
     description: 'General contractor in Cedar City, Utah providing siding, gutters, remodeling, home additions, basement finishing and custom home building across Southern Utah.',
     address: { '@type': 'PostalAddress', streetAddress: '1005 E Mill Hollow Way', addressLocality: 'Cedar City', addressRegion: 'UT', postalCode: '84721', addressCountry: 'US' },
     geo: { '@type': 'GeoCoordinates', latitude: 37.6734344, longitude: -113.0729133 },
@@ -115,7 +144,7 @@ function render(meta, body, path) {
     .replace(/\{\{cur:([\w-]+)\}\}/g, (_, s) => (s === meta.slug ? 'aria-current="page"' : ''))
     .replaceAll('{{title}}', esc(meta.title))
     .replaceAll('{{description}}', esc(meta.description || ''))
-    .replaceAll('{{og}}', meta.og ? img(meta.og) : img('2024/07/02155203/14109959553950996144.jpg'))
+    .replaceAll('{{og}}', meta.og ? absImg(meta.og) : absImg('gallery/home-hero.jpg'))
     .replaceAll('{{site_url}}', SITE_URL)
     .replaceAll('{{path}}', path)
     .replaceAll('{{slug}}', meta.slug)
@@ -124,7 +153,10 @@ function render(meta, body, path) {
     .replaceAll('{{jsonld}}', jsonld(meta, path, body))
     .replaceAll('{{content}}', body);
   html = expand(html);
-  return BASE_PATH ? html.replace(/\b(href|src)="\/(?!\/)/g, `$1="${BASE_PATH}/`) : html;
+  if (!BASE_PATH) return html;
+  return html
+    .replace(/\b(href|src)="\/(?!\/)/g, `$1="${BASE_PATH}/`)
+    .replace(/url\((['"]?)\/(?!\/)/g, `url($1${BASE_PATH}/`);
 }
 
 rmSync(out, { recursive: true, force: true });

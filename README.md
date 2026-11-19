@@ -4,18 +4,18 @@ Static rebuild of janda-construction.com (HTML, CSS, JS, no framework). A small 
 
 ## Use
 ```
-npm run build         # builds to dist/, images load from the old host's CDN (works for previewing)
-npm run serve         # preview dist/ at localhost
-npm run images        # run on a machine with normal internet: copies all images into assets/img/
-npm run build:local   # builds with images served from /assets/img/ (no dependency on the old host)
+npm run build   # builds to dist/
+npm run serve   # preview dist/ at localhost
 ```
-Deploy the contents of `dist/` to any static host (Netlify, Cloudflare Pages, GitHub Pages, etc).
+Deploy the contents of `dist/` to any static host. Pushing to this repo deploys to GitHub Pages through `.github/workflows/pages.yml`.
+
+All photos live in `assets/img/` (resized for the web, about 6 MB). `scripts/fetch-images.sh` is only for re-downloading the originals from the old host if they are ever needed.
 
 ## Layout
 - `src/pages/*.html` page content (front matter sets title, description, share image)
 - `src/layout.html` shared header and footer
 - `src/css/style.css`, `src/js/main.js`
-- `src/gallery.json` gallery photo list
+- `src/gallery.json` gallery content: the before and after project and the curated photo sets (photos in `assets/img/gallery/`)
 - `build.mjs` builder. Facts that conflict on the live site (`HOURS`, `CONTACT_HOURS`) are constants at the top.
 - `FORM_ENDPOINT` env var: set to a form service URL to post the contact form. Left empty it opens an email draft.
 
