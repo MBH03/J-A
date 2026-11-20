@@ -119,7 +119,7 @@ const jsonld = (meta, path, body) => {
     telephone: '+1-435-592-0680',
     email: 'jameshenrie2006@hotmail.com',
     logo: absImg('2024/07/02145514/logo.png'),
-    image: absImg('gallery/home-hero.jpg'),
+    image: absImg('gallery/hero-1.jpg'),
     description: 'General contractor in Cedar City, Utah providing siding, gutters, remodeling, home additions, basement finishing and custom home building across Southern Utah.',
     address: { '@type': 'PostalAddress', streetAddress: '1005 E Mill Hollow Way', addressLocality: 'Cedar City', addressRegion: 'UT', postalCode: '84721', addressCountry: 'US' },
     geo: { '@type': 'GeoCoordinates', latitude: 37.6734344, longitude: -113.0729133 },
@@ -149,7 +149,7 @@ function render(meta, body, path) {
     .replace(/\{\{cur:([\w-]+)\}\}/g, (_, s) => (s === meta.slug ? 'aria-current="page"' : ''))
     .replaceAll('{{title}}', esc(meta.title))
     .replaceAll('{{description}}', esc(meta.description || ''))
-    .replaceAll('{{og}}', meta.og ? absImg(meta.og) : absImg('gallery/home-hero.jpg'))
+    .replaceAll('{{og}}', meta.og ? absImg(meta.og) : absImg('gallery/hero-1.jpg'))
     .replaceAll('{{site_url}}', SITE_URL)
     .replaceAll('{{path}}', path)
     .replaceAll('{{slug}}', meta.slug)

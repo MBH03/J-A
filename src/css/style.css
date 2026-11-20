@@ -351,3 +351,20 @@ form.contact .hp { position: absolute; left: -9999px; }
 @media (max-width: 600px) { .tiles.wide { grid-template-columns: 1fr; } }
 
 .page-home .ba-pair { display: none; }
+
+/* Home hero: slow crossfade between three photos */
+.hero-slides { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #20241a; }
+.hero-slides span { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; animation: hero-fade 21s infinite; will-change: opacity, transform; }
+.hero-slides span:nth-child(2) { animation-delay: 7s; }
+.hero-slides span:nth-child(3) { animation-delay: 14s; }
+@keyframes hero-fade {
+  0% { opacity: 0; transform: scale(1.08); }
+  6% { opacity: 1; }
+  33% { opacity: 1; }
+  40% { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slides span { animation: none !important; }
+  .hero-slides span:first-child { opacity: 1; }
+}
