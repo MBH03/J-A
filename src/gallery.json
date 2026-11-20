@@ -1,12 +1,12 @@
 {
  "projects": [
   {
-   "title": "Siding Remodel",
-   "summary": "See the difference new siding makes on a Southern Utah home.",
+   "title": "Full Home Remodel",
+   "summary": "See the difference a full remodel makes on a Southern Utah home.",
    "before": "2024/07/08132541/before.jpg",
    "after": "2024/07/08132540/after.jpg",
-   "beforeAlt": "Home before the siding remodel",
-   "afterAlt": "Home after the siding remodel with new siding"
+   "beforeAlt": "Home before the full remodel",
+   "afterAlt": "Home after the full remodel"
   }
  ],
  "sets": [
