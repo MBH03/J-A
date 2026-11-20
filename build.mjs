@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const src = join(root, 'src');
@@ -83,7 +84,11 @@ function expand(html) {
     .replace(/\{\{img:([^}]+)\}\}/g, (_, p) => img(p));
 }
 
-const layout = readFileSync(join(src, 'layout.html'), 'utf8');
+// Version the stylesheet and script by content so browsers never keep a stale copy
+const version = (f) => createHash('sha1').update(readFileSync(join(src, f))).digest('hex').slice(0, 10);
+const layout = readFileSync(join(src, 'layout.html'), 'utf8')
+  .replace('/css/style.css', `/css/style.css?v=${version('css/style.css')}`)
+  .replace('/js/main.js', `/js/main.js?v=${version('js/main.js')}`);
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 const BUSINESS_ID = SITE_URL + '/#business';
