@@ -114,7 +114,8 @@ const jsonld = (meta, path, body) => {
   const graph = [{
     '@type': ['GeneralContractor', 'HomeAndConstructionBusiness'],
     '@id': BUSINESS_ID,
-    name: 'J&A Construction',
+    name: 'J and A Construction',
+    alternateName: ['J&A Construction', 'J & A Construction', 'J and A Construction Cedar City'],
     url: SITE_URL + '/',
     telephone: '+1-435-592-0680',
     email: 'jameshenrie2006@hotmail.com',
@@ -127,7 +128,7 @@ const jsonld = (meta, path, body) => {
     openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '07:00', closes: '18:00' }],
     areaServed: AREAS.map((n) => ({ '@type': 'City', name: n, containedInPlace: { '@type': 'State', name: 'Utah' } })),
     founder: { '@type': 'Person', name: 'James Henrie' },
-    sameAs: ['https://www.facebook.com/jandaconstructionut', 'https://www.yelp.com/biz/j-and-a-construction-cedar-city-2'],
+    sameAs: ['https://maps.google.com/?cid=8438693738409973379', 'https://www.facebook.com/jandaconstructionut', 'https://www.yelp.com/biz/j-and-a-construction-cedar-city-2'],
     hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Construction services', itemListElement: SERVICE_PAGES.map(([n, u]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: n, url: SITE_URL + u } })) },
   }];
   if (meta.slug !== 'home' && meta.slug !== '404') {
