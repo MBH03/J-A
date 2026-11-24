@@ -115,7 +115,7 @@ const jsonld = (meta, path, body) => {
     '@type': ['GeneralContractor', 'HomeAndConstructionBusiness'],
     '@id': BUSINESS_ID,
     name: 'J and A Construction',
-    alternateName: ['J&A Construction', 'J & A Construction', 'J and A Construction Cedar City'],
+    alternateName: ['J&A Construction', 'J & A Construction', 'JandA Construction', 'J-A Construction', 'J and A Construction Cedar City'],
     url: SITE_URL + '/',
     telephone: '+1-435-592-0680',
     email: 'jameshenrie2006@hotmail.com',
