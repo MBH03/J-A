@@ -14,6 +14,7 @@ All photos live in `assets/img/` (resized for the web, about 6 MB). `scripts/fet
 ## Layout
 - `src/pages/*.html` page content (front matter sets title, description, share image)
 - `src/layout.html` shared header and footer
+- `src/root/` files copied as-is to the site root (Google Search Console verification file: keep it)
 - `src/css/style.css`, `src/js/main.js`
 - `src/gallery.json` gallery content: the before and after project and the curated photo sets (photos in `assets/img/gallery/`)
 - `build.mjs` builder. Facts that conflict on the live site (`HOURS`, `CONTACT_HOURS`) are constants at the top.

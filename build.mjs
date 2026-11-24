@@ -171,6 +171,8 @@ mkdirSync(out, { recursive: true });
 cpSync(join(src, 'css'), join(out, 'css'), { recursive: true });
 cpSync(join(src, 'js'), join(out, 'js'), { recursive: true });
 if (existsSync(join(root, 'assets'))) cpSync(join(root, 'assets'), join(out, 'assets'), { recursive: true });
+// Files served as-is from the site root (search engine verification files, etc.)
+if (existsSync(join(src, 'root'))) cpSync(join(src, 'root'), out, { recursive: true });
 
 const urls = [];
 for (const f of readdirSync(join(src, 'pages')).filter((n) => n.endsWith('.html')).sort()) {
