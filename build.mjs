@@ -1,4 +1,4 @@
-// Static site builder for J&A Construction. No dependencies.
+// Static site builder for J & A Construction. No dependencies.
 //   node build.mjs   images load from /assets/img/ (copied into dist/assets/img)
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -114,8 +114,9 @@ const jsonld = (meta, path, body) => {
   const graph = [{
     '@type': ['GeneralContractor', 'HomeAndConstructionBusiness'],
     '@id': BUSINESS_ID,
-    name: 'J and A Construction',
-    alternateName: ['J&A Construction', 'J & A Construction', 'JandA Construction', 'J-A Construction', 'J and A Construction Cedar City'],
+    name: 'J & A Construction',
+    legalName: 'J & A Construction',
+    alternateName: ['J and A Construction', 'JandA Construction', 'J&A Construction', 'J-A Construction', 'J and A Construction Cedar City'],
     url: SITE_URL + '/',
     telephone: '+1-435-592-0680',
     email: 'jameshenrie2006@hotmail.com',

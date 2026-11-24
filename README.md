@@ -1,4 +1,4 @@
-# J&A Construction website rebuild
+# J & A Construction website rebuild
 
 Static rebuild of janda-construction.com (HTML, CSS, JS, no framework). A small Node script assembles the pages.
 
