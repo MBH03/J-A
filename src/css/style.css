@@ -166,17 +166,20 @@ ul { margin: 0 0 1em; }
 /* Testimonials */
 .testimonials { background: var(--ink); color: #fff; padding: var(--section) 0; }
 .testimonials h2 { color: #fff; text-align: center; margin-bottom: clamp(40px, 5vw, 70px); }
-.quotes { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 6vw, 96px); }
+.quotes { --gap: clamp(36px, 6vw, 96px); display: flex; gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; align-items: flex-start; outline: none; }
+.quotes::-webkit-scrollbar { display: none; }
+.quotes > blockquote { flex: 0 0 calc((100% - var(--gap)) / 2); scroll-snap-align: start; }
+.quotes-nav { display: flex; justify-content: center; gap: 14px; margin-top: 40px; }
+.quotes-arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.45); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; transition: background .2s, color .2s, opacity .2s; }
+.quotes-arrow:hover:not(:disabled) { background: #fff; color: var(--ink); }
+.quotes-arrow:disabled { opacity: .3; cursor: default; }
 .quotes blockquote { margin: 0; position: relative; padding-top: 54px; }
-.quotes blockquote::before { content: "\201C"; position: absolute; top: -6px; left: -4px; font: 400 96px/1 var(--font-display); color: var(--olive); opacity: .9; }
+.quotes blockquote::before { content: "\201C"; position: absolute; top: -10px; left: -4px; font: 400 88px/1 var(--font-display); color: #d6da7a; opacity: .8; }
 .quotes blockquote p { font: 400 clamp(19px, 1.7vw, 23px)/1.65 var(--font-display); color: rgba(255,255,255,.94); margin-bottom: 26px; }
 .quotes cite { display: block; font-style: normal; border-top: 1px solid rgba(255,255,255,.18); padding-top: 18px; }
 .quotes cite b { display: block; font: 500 13px/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
 .quotes cite span { color: #b7bb86; font-size: 14px; }
-.quotes cite span a { color: inherit; }
 .quotes blockquote.long p { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.7; }
-.quotes-more { text-align: center; margin: 48px 0 0; }
-.quotes-more a { color: #d6da7a; font: 500 12.5px/1 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
 
 /* Service area strip */
 .area { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 6vw, 96px); align-items: center; }
@@ -316,7 +319,8 @@ form.contact .hp { position: absolute; left: -9999px; }
   .header-inner { gap: 14px; }
 }
 @media (max-width: 960px) {
-  .intro-grid, .why, .split, .contact-grid, .quotes, .area { grid-template-columns: 1fr; }
+  .intro-grid, .why, .split, .contact-grid, .area { grid-template-columns: 1fr; }
+  .quotes > blockquote { flex-basis: 100%; }
   .split.flip .split-media { order: 0; }
   .why-photo { min-height: 340px; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
@@ -324,6 +328,8 @@ form.contact .hp { position: absolute; left: -9999px; }
   .trust ul { grid-template-columns: repeat(2, 1fr); }
   .trust li:nth-child(3) { border-left: 0; }
   .trust li { border-top: 1px solid rgba(255,255,255,.12); }
+  .trust li { padding: 26px 12px; min-width: 0; }
+  .trust span { letter-spacing: .12em; }
   .trust li:nth-child(-n+2) { border-top: 0; }
   .cards { grid-template-columns: 1fr; }
   .ba-static { grid-template-columns: 1fr; }

@@ -129,4 +129,21 @@
       }
     });
   }
+  // Reviews carousel: arrows scroll one page of reviews at a time
+  const track = $('[data-carousel]');
+  if (track) {
+    const btns = document.querySelectorAll('.quotes-arrow');
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      btns.forEach((b) => { b.disabled = b.dataset.dir === '-1' ? track.scrollLeft <= 2 : track.scrollLeft >= max; });
+      $('.quotes-nav').hidden = track.scrollWidth <= track.clientWidth + 2;
+    };
+    btns.forEach((b) => b.addEventListener('click', () => {
+      track.scrollBy({ left: Number(b.dataset.dir) * (track.clientWidth + parseFloat(getComputedStyle(track).columnGap || 0)), behavior: 'smooth' });
+    }));
+    track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+    track.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); btns[e.key === 'ArrowRight' ? 1 : 0].click(); } });
+    addEventListener('resize', sync);
+    sync();
+  }
 })();
