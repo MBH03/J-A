@@ -173,6 +173,10 @@ ul { margin: 0 0 1em; }
 .quotes cite { display: block; font-style: normal; border-top: 1px solid rgba(255,255,255,.18); padding-top: 18px; }
 .quotes cite b { display: block; font: 500 13px/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
 .quotes cite span { color: #b7bb86; font-size: 14px; }
+.quotes cite span a { color: inherit; }
+.quotes blockquote.long p { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.7; }
+.quotes-more { text-align: center; margin: 48px 0 0; }
+.quotes-more a { color: #d6da7a; font: 500 12.5px/1 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
 
 /* Service area strip */
 .area { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 6vw, 96px); align-items: center; }
