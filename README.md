@@ -21,7 +21,6 @@ All photos live in `assets/img/` (resized for the web, about 6 MB). `scripts/fet
 - `FORM_ENDPOINT` env var: set to a form service URL to post the contact form. Left empty it opens an email draft.
 
 ## Open items to confirm with James
-- "Since 2004" (home page) vs "since 1990" (all other pages)
 - Brown accent color (approximated as #6B3F10)
 - Testimonial section background, form handling and spam protection, gallery album groupings
 - Home page intro photo (currently the hero photo as a stand in)
