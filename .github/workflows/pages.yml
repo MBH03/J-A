@@ -24,8 +24,8 @@ jobs:
           node-version: 22
       - name: Build
         env:
-          BASE_PATH: /J-A
-          SITE_URL: https://mbh03.github.io/J-A
+          BASE_PATH: ""
+          SITE_URL: https://www.janda-construction.com
         run: node build.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
