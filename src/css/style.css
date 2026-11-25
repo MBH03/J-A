@@ -378,3 +378,17 @@ form.contact .hp { position: absolute; left: -9999px; }
   .hero-slides span { animation: none !important; }
   .hero-slides span:first-child { opacity: 1; }
 }
+
+/* Estimate policy (contact page) */
+.estimate-note { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 760px; margin: 8px auto 56px; border: 1px solid #d8d4c2; text-align: center; }
+.estimate-note > div { padding: 26px 20px; }
+.estimate-note > div + div { border-left: 1px solid #d8d4c2; }
+.estimate-note b { display: block; font: 400 28px/1.2 var(--font-display); color: var(--ink); }
+.estimate-note span { display: block; margin-top: 6px; font: 500 12px/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--olive); }
+.estimate-note p { grid-column: 1 / -1; margin: 0; padding: 18px 20px; border-top: 1px solid #d8d4c2; }
+@media (max-width: 560px) { .estimate-note b { font-size: 22px; } .estimate-note > div { padding: 20px 10px; } }
+/* Review quote on service pages */
+.pull-quote { margin: 0 0 56px; padding: 0 0 0 24px; border-left: 3px solid var(--olive); }
+.pull-quote p { font: 400 clamp(18px, 1.6vw, 21px)/1.6 var(--font-display); color: var(--ink); margin: 0 0 12px; }
+.pull-quote cite { font: 500 12px/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--olive); font-style: normal; }
+.trust small { display: block; margin-top: 6px; font: 400 13px/1.4 var(--font-body); color: rgba(255,255,255,.6); }

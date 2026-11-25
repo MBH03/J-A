@@ -95,6 +95,7 @@ const BUSINESS_ID = SITE_URL + '/#business';
 const SERVICE_PAGES = [
   ['Siding installation and replacement', '/siding/'],
   ['Gutter installation and replacement', '/gutters-in-cedar-city-ut/'],
+  ['Gutter company in Southern Utah', '/gutter-company-southern-utah/'],
   ['Home remodeling', '/home-remodeling-in-cedar-city-ut/'],
   ['Kitchen remodeling', '/kitchen-remodeling-in-cedar-city-ut/'],
   ['Bathroom remodeling', '/bathroom-remodeling-in-cedar-city-ut/'],
